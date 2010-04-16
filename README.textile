@@ -23,6 +23,6 @@ h2. Todo
 
 h2. Credits
 
-Written by Greg Leuch <http://gleuch.com>
+Written by Greg Leuch "http://gleuch.com":http://gleuch.com
 License: Creative Commons NC-BY-SA.
 
