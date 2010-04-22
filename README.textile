@@ -10,15 +10,11 @@ h2. Installation
 ** TWITTER_RETURN_FOLLOW as true or false to also have your Twitter account follow them in return
 ** TWITTER_FOLLOWING to the desired Twitter username to have users follow.
 ** TWITTER_FOLLOWING_PASSWORD to  the Twitter account password for the username to have followed. (Required only if TWITTER_RETURN_FOLLOW is true.)
+** TWITTER_SCREEN_SIZE to adjust the overall screen size. (Default is 100, no % required.)
 
 h4. Requirements
 
 PHP 5.* and PHPCurl, plus a Twitter account to follow.
-
-
-h2. Todo
-
-* Make this look pretty for display in a kiosk-type mode. (Large text, large buttons, etc.)
 
 
 h2. Credits
