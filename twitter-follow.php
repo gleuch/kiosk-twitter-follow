@@ -67,30 +67,34 @@ if (is_array($_POST['user']) && !empty($_POST['user']['username']) && !empty($_P
 
   // Display success/error messages
   if ($info['http_code'] == '200'):
+    $hide_form = true;
 ?>
     <script type="text/javascript">setTimeout(function() {location.href='<?php echo $_SERVER['PHP_SELF'] ?>';}, 10000);</script>
-    <h2 class="ta_c">Congrats @<?php echo $_POST['user']['username'] ?>! You are now following @<?php echo TWITTER_USER ?>!</h2>
-  <?php else: ?>
-    <script type="text/javascript">setTimeout(function() {location.href='<?php echo $_SERVER['PHP_SELF'] ?>';}, 5000);</script>
-    <?php if (strtolower(TWITTER_USER) == strtolower($_POST['user']['username']) ): ?>
-      <h2 class="ta_c">You cannot follow yourself! Please try again.</h2>
-    <?php elseif ($info['http_code'] == '401'): ?>
-      <h2 class="ta_c">Sorry @<?php echo $_POST['user']['username'] ?>, your user credentials are invalid. Please try again to follow @<?php echo TWITTER_USER ?>.</h2>
-    <?php else: ?>
-      <h2 class="ta_c">Sorry @<?php echo $_POST['user']['username'] ?>, an error occurred when trying to follow @<?php echo TWITTER_USER ?> You might already be following them.</h2>
-    <?php endif; ?>
+    <p class="welcome error">Congrats @<?php echo $_POST['user']['username'] ?>! You are now following @<?php echo TWITTER_USER ?>!</p>
     <p class="note">(You will be redirected to the form momentarily.)</p>
+  <?php else: 
+    $hide_welcome = true;
+  ?>
+    <?php if (strtolower(TWITTER_USER) == strtolower($_POST['user']['username']) ): ?>
+      <p class="welcome error">You cannot follow yourself! Please try again.</p>
+    <?php elseif ($info['http_code'] == '401'): ?>
+      <p class="welcome error">Sorry @<?php echo $_POST['user']['username'] ?>, your user credentials are invalid. Please try again to follow @<?php echo TWITTER_USER ?>.</p>
+    <?php else: ?>
+      <p class="welcome error">Sorry @<?php echo $_POST['user']['username'] ?>, an error occurred when trying to follow @<?php echo TWITTER_USER ?>. You might already be following them!</p>
+    <?php endif; ?>
   <?php endif; ?>
 
 
 <?php 
 // The form...
-else: ?>
+endif;
+
+if (!$hide_form): ?>
   <?php if (is_array($_POST['user']) && empty($_POST['user']['username'])): ?>
     <p class="welcome error">You must enter your username!</p>
   <?php elseif (is_array($_POST['user']) && empty($_POST['user']['password'])): ?>
     <p class="welcome error">You must enter your password!</p>
-  <?php else: ?>
+  <?php elseif (!$hide_welcome): ?>
     <p class="welcome">Hello new friend! Enter your Twitter user information to automatically follow me.</p>
   <?php endif; ?>
 <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
@@ -118,6 +122,7 @@ function twitter_follow($follow, $user, $pass) {
   $url = TWITTER_FOLLOW_URL .'?'. implode('&', $groups);
 
   $ch = curl_init();
+  curl_setopt($ch, CURLOPT_HTTPHEADER, array('Expect:'));
   curl_setopt($ch, CURLOPT_URL, $url);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERPWD, $user .':'. $pass);
